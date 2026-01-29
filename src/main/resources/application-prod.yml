@@ -1,9 +1,10 @@
-# Production configuration
+# Production configuration for Railway
 spring:
-  # PostgreSQL for production
   datasource:
-    url: ${DATABASE_URL}
+    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL}}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
   
   h2:
     console:
@@ -11,13 +12,16 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
 
-# Disable H2 console in production
 server:
   error:
     include-stacktrace: never
@@ -26,3 +30,4 @@ logging:
   level:
     uk.co.nationalninesgolf: INFO
     org.springframework: WARN
+    com.zaxxer.hikari: WARN
