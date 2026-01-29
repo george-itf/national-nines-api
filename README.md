@@ -47,6 +47,8 @@ Backend API for National Nines Golf website - handles competition entries, shop 
 | `MAIL_HOST` | SMTP host | smtp.gmail.com |
 | `MAIL_USERNAME` | SMTP username | - |
 | `MAIL_PASSWORD` | SMTP password | - |
+| `ADMIN_EMAIL` | Admin notification email | info@nationalninesgolf.co.uk |
+| `ADMIN_API_KEY` | API key for admin endpoints | - (open in dev) |
 
 ## API Endpoints
 
@@ -161,16 +163,22 @@ Set `SPRING_PROFILES_ACTIVE=prod` for production settings.
 | shipping_cost | DECIMAL | Shipping cost |
 | total | DECIMAL | Grand total |
 
-## Security Notes
+## Security
 
-⚠️ **Admin endpoints are not secured in this version.**
+Admin endpoints (`/api/admin/*`) are protected by API key authentication.
 
-For production:
-1. Add Spring Security
-2. Implement authentication (OAuth2, API keys, etc.)
-3. Secure admin endpoints
-4. Add rate limiting
-5. Enable HTTPS
+**To access admin endpoints in production:**
+```bash
+curl -H "X-API-Key: your-secret-key" https://api.nationalninesgolf.co.uk/api/admin/dashboard
+```
+
+**Development mode:** If `ADMIN_API_KEY` is not set, admin endpoints are open.
+
+**Recommendations for production:**
+1. Set a strong `ADMIN_API_KEY` (generate with `openssl rand -hex 32`)
+2. Enable HTTPS (handled by Railway/Render/etc.)
+3. Consider adding rate limiting
+4. Monitor with actuator endpoints
 
 ## License
 
