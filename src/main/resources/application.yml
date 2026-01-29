@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: national-nines-api
+  
+  # Database - H2 for development
+  datasource:
+    url: jdbc:h2:file:./data/national-nines;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  
+  # Mail (optional - for notifications)
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# Server
+server:
+  port: ${PORT:8080}
+
+# Stripe
+stripe:
+  api:
+    key: ${STRIPE_API_KEY:}
+  webhook:
+    secret: ${STRIPE_WEBHOOK_SECRET:}
+
+# App config
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+  frontend-url: ${FRONTEND_URL:https://nationalninesgolf.co.uk}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# Logging
+logging:
+  level:
+    uk.co.nationalninesgolf: DEBUG
+    org.springframework: INFO
+    com.stripe: INFO

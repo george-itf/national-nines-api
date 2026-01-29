@@ -1,0 +1,28 @@
+# Production configuration
+spring:
+  # PostgreSQL for production
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+  
+  h2:
+    console:
+      enabled: false
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Disable H2 console in production
+server:
+  error:
+    include-stacktrace: never
+
+logging:
+  level:
+    uk.co.nationalninesgolf: INFO
+    org.springframework: WARN
