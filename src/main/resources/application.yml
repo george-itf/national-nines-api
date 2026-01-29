@@ -50,6 +50,7 @@ stripe:
 app:
   base-url: ${APP_BASE_URL:http://localhost:8080}
   frontend-url: ${FRONTEND_URL:https://nationalninesgolf.co.uk}
+  admin-email: ${ADMIN_EMAIL:info@nationalninesgolf.co.uk}
 
 # Actuator
 management:

@@ -39,6 +39,7 @@ public class StripeService {
     
     private final EntryService entryService;
     private final OrderService orderService;
+    private final EmailService emailService;
     
     @PostConstruct
     public void init() {
@@ -187,12 +188,21 @@ public class StripeService {
         
         if ("entry".equals(type)) {
             Long entryId = Long.parseLong(metadata.get("entry_id"));
-            entryService.markAsPaid(entryId, session.getPaymentIntent());
+            Entry entry = entryService.markAsPaid(entryId, session.getPaymentIntent());
             log.info("Entry {} payment completed", entryId);
+            
+            // Send confirmation emails
+            emailService.sendEntryConfirmation(entry);
+            emailService.notifyAdminNewEntry(entry);
+            
         } else if ("order".equals(type)) {
             Long orderId = Long.parseLong(metadata.get("order_id"));
-            orderService.markAsPaid(orderId, session.getPaymentIntent());
+            Order order = orderService.markAsPaid(orderId, session.getPaymentIntent());
             log.info("Order {} payment completed", metadata.get("order_number"));
+            
+            // Send confirmation emails
+            emailService.sendOrderConfirmation(order);
+            emailService.notifyAdminNewOrder(order);
         }
     }
     
