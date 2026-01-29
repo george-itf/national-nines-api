@@ -1,12 +1,17 @@
 # Production configuration for Railway
 spring:
   datasource:
-    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
-    username: ${PGUSER}
-    password: ${PGPASSWORD}
+    # Railway provides DATABASE_URL - Spring Boot auto-parses it if named SPRING_DATASOURCE_URL
+    # Or use individual vars if available
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:railway}}
+    username: ${SPRING_DATASOURCE_USERNAME:${PGUSER:postgres}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${PGPASSWORD:}}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
   
   h2:
     console:
@@ -19,7 +24,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           lob:
             non_contextual_creation: true
@@ -33,3 +37,4 @@ logging:
     uk.co.nationalninesgolf: INFO
     org.springframework: WARN
     com.zaxxer.hikari: WARN
+    org.hibernate: WARN
